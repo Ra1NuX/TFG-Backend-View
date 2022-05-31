@@ -4,11 +4,23 @@ const users = {}
 module.exports = (io) => {
 
 io.on('connection', (socket) => {
-    socket.on('register', (data) => {
+    
+    socket.on('subscribe', (data, room) => {
         try {
+            socket.join(room);
             users[socket.id] = data
-            console.log('['+chalk.green(` + `) + ']', ` ${users[socket.id].username} connected`);
+            users[socket.id].room = room
+            console.log('['+chalk.green(` + `) + ']', ` ${users[socket.id].username} connected to room ${room}`);
         } catch (error) {
+            console.log(error)
+        }
+    })
+
+    socket.on('unsubscribe', (room) => {
+        try {
+            console.log('['+chalk.red(` - `) + ']', ` ${users[socket.id].username} leave from room: ${room}`);
+            socket.leave(room)
+        }catch (error) {
             console.log(error)
         }
     })
@@ -25,7 +37,7 @@ io.on('connection', (socket) => {
     });
     socket.on('message', (msg) => {
         console.log(msg);
-        io.sockets.emit('messageSended', msg);
+        io.to(users[socket.id].room).emit('messageSended', msg);
     });
     socket.on('typing', (msg) => {
         console.log(msg);

@@ -2,21 +2,35 @@
   "name": "tfg-backend-view",
   "version": "0.0.0",
   "private": true,
+  "main": "./bin/www",
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "nodemon ./bin/www"
+    "dev": "nodemon --watch ./bin/www --watch * -e js,ejs,css",
+    "tailwind:css": "postcss public/stylesheets/tailwind.css -wo public/stylesheets/style.css"
   },
   "dependencies": {
+    "@headlessui/react": "^1.6.2",
     "chalk": "^4.1.2",
+    "connect-flash": "^0.1.1",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "ejs": "^3.1.7",
     "express": "~4.16.1",
+    "express-session": "^1.17.3",
     "http-errors": "~1.6.3",
     "mongoose": "^6.3.1",
     "morgan": "~1.9.1",
+    "node-upnp": "^1.2.0",
     "nodemon": "^2.0.16",
-    "socket.io": "^4.5.0"
+    "postcss-cli": "^9.1.0",
+    "socket.io": "^4.5.0",
+    "uuid": "^8.3.2",
+    "yup": "^0.32.11"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.7",
+    "postcss": "^8.4.13",
+    "tailwindcss": "^3.0.24"
   }
 }

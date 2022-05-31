@@ -10,4 +10,4 @@ const MessageSchema = new Schema({
     SawBy: [{ type: Schema.Types.ObjectId, ref: 'User', default: null }],
     File: { type: Schema.Types.Buffer }
 });
-export default model('Message', MessageSchema);
+module.exports = model('Message', MessageSchema);
