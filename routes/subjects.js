@@ -6,8 +6,8 @@ const Subject = require('../models/Subject');
 router.post('/add', function (req, res, next) {
     const { name, code } = req.body;
     const subject = {
-        name,
-        code
+        Name:name,
+        Code:code,
     }
     new Subject(subject).save();
     res.json(subject);

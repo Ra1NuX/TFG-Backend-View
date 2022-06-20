@@ -2,6 +2,7 @@ var express = require('express');
 const Credentials = require('../models/Credentials');
 var router = express.Router();
 const Room = require('../models/Room');
+const fetch = require('node-fetch');
 
 
 
@@ -34,7 +35,7 @@ router.post('/login', (req, res) => {
           message: 'User not found'
         });
       } else {
-        res.cookie('user', user, { maxAge: 900000, httpOnly: false });
+        res.cookie('user', user, { maxAge: 3600000, httpOnly: false });
         res.redirect('/');
       }
     }
@@ -59,19 +60,39 @@ router.post('/register', validate(userSchema, "/"), async (req, res) => {
     Password: password
   });
   await credentials.save();
-  res.status(200).json({
-    message: 'User created successfully',
-    user: credentials
-  });
+
+  res.redirect('/');
+
+  
 
 });
+
+//router para cambiar el name del instituto+ç
+router.post('/change-institute', (req, res) => {
+  const { name } = req.body;
+  const user = req.cookies.user;
+  Credentials.findByIdAndUpdate(user._id, { CenterName: name }, (err, user) => {
+    if(err) {
+      res.status(500).json({
+        message: 'Error when trying to change institute',
+        error: err
+      });
+    }
+    else {
+      req.cookies.user.CenterName = name;
+      res.redirect('/');
+    }
+  });
+});
+
 
 router.get('/', async (req, res) => {
   const cred = await Credentials.find();
   let firstTime;
   console.log(req.cookies)
   if (cred.length === 0) firstTime = true;
-  req.cookies.user ? res.render('dashboard') : res.render('index', { firstTime, messages: req.flash('error') }); 
+
+  req.cookies.user ? res.redirect('/r/' ) : res.render('index', { firstTime, messages: req.flash('error') }); 
 });
 
 module.exports = router;

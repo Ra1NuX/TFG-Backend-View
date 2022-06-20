@@ -4,10 +4,13 @@ const MessageSchema = new Schema({
     SendBy: { type: Schema.Types.ObjectId, ref: 'User', default: null, required: true },
     SendInRoom: { type: Schema.Types.ObjectId, ref: 'Room', default: null },
     SendInSubject: { type: Schema.Types.ObjectId, ref: 'Subject', default: null },
-    LastEdittedAt: { type: Date, default: null },
-    RepyOf: { type: Schema.Types.ObjectId, ref: 'Message', default: null },
     Content: { type: String, required: true },
-    SawBy: [{ type: Schema.Types.ObjectId, ref: 'User', default: null }],
-    File: { type: Schema.Types.Buffer }
+    FirebaseRef: { type: String, required: true },
+    UserName: { type: String, required: true },
+    DeletedAt: { type: Date, default: null },
+    LastEdittedAt: { type: Date, default: null }, //no lo voy a hacer
+    RepyOf: { type: Schema.Types.ObjectId, ref: 'Message', default: null }, // 
+    SawBy: [{ type: Schema.Types.ObjectId, ref: 'User', default: null }], // 
+    File: { type: Schema.Types.Buffer } // 
 });
 module.exports = model('Message', MessageSchema);

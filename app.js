@@ -12,6 +12,7 @@ var usersRouter = require('./routes/users');
 var messageRouter = require('./routes/messages.js');
 var roomRouter = require('./routes/rooms.js');
 var subjectRouter = require('./routes/subjects.js');
+var eventRouter = require('./routes/events.js');
 
 var app = express();
 
@@ -37,6 +38,7 @@ app.use('/u', usersRouter);
 app.use('/m', messageRouter);
 app.use('/r', roomRouter);
 app.use('/s', subjectRouter);
+app.use('/e', eventRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

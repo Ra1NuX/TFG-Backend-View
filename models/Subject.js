@@ -3,4 +3,4 @@ const SubjectSchema = new Schema({
    Name: { type: String, required: true },
    Code: { type: String, required: true },
 });
-module.exports = model('Subjects', SubjectSchema);
+module.exports = model('Subject', SubjectSchema);

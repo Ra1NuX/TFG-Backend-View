@@ -1,16 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel='stylesheet' href='../stylesheets/style.css' />
+
+    <title>Dashboard</title>
 </head>
-<body>
-    <div class="bg-red-500 flex h-16">
-    hola
-    </div>
-    <button onclick="signOut()">Logout</button>
+
+<body class="p-0 bg-blue-light overflow-hidden">
+    <%-include('./components/Navigation.ejs')%>
+        <% rooms.forEach(room=> { %>
+
+            <div id="<%=room._id%>" class="hidden">
+                <div class="bg-black/50 inset-0 absolute z-[1]" onclick="hideModal('<%=room._id%>')"></div>
+                <div
+                    class="absolute z-10 p-4 block w-full mx-auto md:w-[70%] md:mx-[15%] my-4 rounded shadow-md bg-white shadow-[#ff00003f]">
+                    <h2 class="my-2 text-lg font-semibold">Are you sure you want delete this Class?</h2>
+                    <p>This action is irreversible</p>
+                    <div class="grid md:grid-cols-2 gap-1 md:gap-5 my-2">
+                        <button onClick="deleteRoom('<%=room._id%>'); location.reload()"
+                            class="bg-red-500 px-2 items-center text-white rounded h-6 leading-none">Yes ⚠</button>
+                        <button onclick="hideModal('<%=room._id%>')"
+                            class="bg-blue-500 px-2 py-auto text-white rounded h-6 ">No</button>
+                    </div>
+                </div>
+            </div>
+
+            <%})%>
+
+                <div class="h-[95vh] w-full grid grid-cols-1 md:grid-cols-2">
+                    <div class="h-full flex flex-col justify-center">
+
+                        <fieldset class="p-4 mx-2 md:mx-[15%] my-4 rounded shadow-md bg-white ">
+                            <legend class="text-2xl font-bold drop-shadow-md">Setting</legend>
+                            <form action="/change-institute" class="flex flex-col gap-5" method="POST">
+                                <label class="block"> Center Name:
+                                    <input required
+                                        class=" focus:shadow-blue-mid w-full block shadow-sm border-b-2 border-blue-500 h-full p-2 rounded py-2 focus-within:outline-none overflow-y-clip focus-within:text-black"
+                                        type="text" name="name" autocomplete="off" placeholder="..." value="<%=credentials.CenterName %>" />
+                                </label>
+                               
+                                <button id="send"
+                                    class="bg-blue-mid h-10 px-10 text-white font-semibold hover:bg-blue-mid hover:cursor-pointer rounded">Save</button>
+                            </form>
+                        </fieldset>
+
+                        <fieldset class="p-4 mx-2 md:mx-[15%] my-4 rounded shadow-md bg-white ">
+                            <legend class="text-2xl font-bold drop-shadow-md">Create a new room</legend>
+                            <form action="/r/add" class="flex flex-col gap-5" method="POST">
+                                <label class="block"> Name:
+                                    <input required
+                                        class=" focus:shadow-blue-mid w-full block shadow-sm border-b-2 border-blue-500 h-full p-2 rounded py-2 focus-within:outline-none overflow-y-clip focus-within:text-black"
+                                        type="text" name="name" autocomplete="off" placeholder="..." />
+                                </label>
+                                <label>Max Users Allowed: <span style="font-size: x-small; color: gray;">(0 for
+                                        infinite)</span>
+                                    <input min="0" required
+                                        class="w-full block shadow-md border-b-2 border-blue-500 h-full p-2 rounded py-2 focus-within:outline-none overflow-y-clip focus-within:text-black"
+                                        type="number" id="maxSize" name="maxSize" placeholder="0" />
+                                </label>
+                                <button id="send"
+                                    class="bg-blue-mid h-10 px-10 text-white font-semibold hover:bg-blue-mid hover:cursor-pointer rounded">Create</button>
+                            </form>
+                        </fieldset>
+                    </div>
+                    <div class="">
+                        <div class="m-5 flex justify-between px-2 border-b-2 border-blue-mid">
+
+                            <input type="checkbox" onclick="selectAll()"
+                                class="inline border-red-300 border-2 self-center">
+                            <h2 class="font-bold text-2xl inline">Rooms</h2>
+
+                            <div  onclick="openConfig()" class="font-bold text-2xl relative select-none cursor-pointer">⚙
+                                <div id="configRooms" class="hidden absolute z-10 bg-white/95 rounded text-base -left-32">
+                                    <button class="hover:bg-slate-200/50 my-2 p-2" onclick="deleteAll()">Delete all checked</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Aqui empieza el bucle -->
+                        <% rooms.forEach(room=> { %>
+                            <%=room.name%>
+                                <div class="m-3 p-4 bg-white rounded shadow-md relative flex justify-between">
+                                    <div class="flex items-center gap-2"> <input type="checkbox" class="mb-[1px] room"
+                                            id="<%=room._id%>">
+                                        <%=room.Name%> [<%=room.Users.length%>/<%=room.MaxUsers%>]
+                                    </div>
+                                    <div>
+                                        <span onclick="location.href='/r/<%=room._id%>'"
+                                            class="relative right-0 bg-blue-500 text-white w-5 h-5 inline-block text-center rounded font-normal cursor-pointer select-none">✎</span>
+                                        <span onclick="showModal('<%=room._id%>')"
+                                            class="relative right-0 bg-red-500 text-white w-5 h-5 inline-block text-center rounded font-bold cursor-pointer select-none">✕</span>
+                                    </div>
+                                </div>
+                                <%})%>
+
+                                    <!-- Aqui Termina el bucle -->
+                    </div>
+                </div>
+
+                <button
+                    class="bg-white absolute bottom-1 left-1 hover:bg-red-600 hover:cursor-pointer border-2 border-red-600 shadow-sm p-2 rounded m-px text-red-600 hover:text-white text-center font-bold"
+                    onclick="signOut()">LogOut😢</button>
 </body>
+
 <script src="/javascripts/dashboard.js"></script>
+
 </html>
